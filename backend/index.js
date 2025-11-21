@@ -44,6 +44,7 @@ const corsOptions = {
         // Use FRONTEND_URL if provided, otherwise default to deployed frontend
         process.env.FRONTEND_URL || 'https://social-media-1-lzs4.onrender.com',
         // Local development URLs
+        'https://social-media-1-lzs4.onrender.com',
         'http://localhost:5000', 
         'http://127.0.0.1:5000',
         'http://localhost:5176', 
