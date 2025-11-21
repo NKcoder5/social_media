@@ -6,39 +6,40 @@ const connectedUsers = new Map();
 
 export const initializeSocket = (server) => {
   io = new Server(server, {
-    cors: {
-      origin: (origin, callback) => {
-        // Build a matching allowlist for sockets
-        const allowed = [
-          process.env.FRONTEND_URL || "https://social-media-1-lzs4.onrender.com",
-          "https://social-media-pdbl.onrender.com",
-          "https://sociogram-1.onrender.com",
-          "https://sociogram-n73b.onrender.com",
-          "http://localhost:5001",
-          "http://localhost:5000",
-          "http://127.0.0.1:5000",
-          "http://localhost:5176",
-          "http://localhost:5175",
-          "http://127.0.0.1:5175",
-          "http://localhost:8000",
-          "http://127.0.0.1:8000",
-          "http://localhost:5173",
-          "http://127.0.0.1:5173",
-          `https://${process.env.REPLIT_DEV_DOMAIN}`,
-          `http://${process.env.REPLIT_DEV_DOMAIN}`
-        ];
+  cors: {
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL || "https://social-media-1-lzs4.onrender.com",
+        "https://social-media-1-lzs4.onrender.com",
+        "https://social-media-pdbl.onrender.com",
+        "https://sociogram-1.onrender.com",
+        "https://sociogram-n73b.onrender.com",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost",
+        // Firebase OAuth popups
+        "https://accounts.google.com",
+        "https://oauth.googleusercontent.com"
+      ];
 
-        // Allow non-browser clients without origin
-        if (!origin) return callback(null, true);
+      // Allow Postman or server-to-server calls
+      if (!origin) return callback(null, true);
 
-        if (allowed.includes(origin)) return callback(null, true);
-        return callback(new Error('Not allowed by CORS'));
-      },
-      methods: ["GET", "POST"],
-      credentials: true,
-      allowEIO3: true
-    }
-  });
+      // Partial matching (fixes Render variations)
+      const isAllowed = allowedOrigins.some(url => origin.startsWith(url));
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS: " + origin));
+    },
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
   // Socket authentication middleware
   io.use((socket, next) => {

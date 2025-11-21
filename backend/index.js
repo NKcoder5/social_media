@@ -45,6 +45,7 @@ app.use(cookieParser());
         // Prefer explicit FRONTEND_URL from environment when available
         process.env.FRONTEND_URL || 'https://social-media-1-lzs4.onrender.com',
         // Backend (self) and known frontend deployments
+        'https://social-media-1-lzs4.onrender.com',
         'https://social-media-pdbl.onrender.com',
         'https://sociogram-1.onrender.com',
         'https://sociogram-n73b.onrender.com',
