@@ -34,7 +34,7 @@ import { useSocket } from '../../context/SocketContext';
 // Force production URL for deployed version
 const SOCKET_URL = window.location.hostname === 'sociogram-1.onrender.com' 
   ? 'https://sociogram-n73b.onrender.com'
-  : import.meta.env.VITE_SOCKET_URL || 'http://localhost:8000';
+  : import.meta.env.VITE_SOCKET_URL || 'https://social-media-pdbl.onrender.com';
 
 // Image component with fallback for failed loads
 const ImageWithFallback = ({ src, alt, fileName, onClick }) => {

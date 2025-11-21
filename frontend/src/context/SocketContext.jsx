@@ -24,7 +24,7 @@ export const SocketProvider = ({ children }) => {
       // Force production URL for deployed version
       const SOCKET_URL = window.location.hostname === 'sociogram-1.onrender.com' 
         ? 'https://sociogram-n73b.onrender.com'
-        : import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:8000';
+        : import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'https://social-media-pdbl.onrender.com';
       
       console.log('🌐 Socket connecting to:', SOCKET_URL);
       

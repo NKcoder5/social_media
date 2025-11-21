@@ -10,7 +10,7 @@ const useSocket = (user) => {
       // Force production URL for deployed version
       const SOCKET_URL = window.location.hostname === 'sociogram-1.onrender.com' 
         ? 'https://sociogram-n73b.onrender.com'
-        : import.meta.env.VITE_SOCKET_URL || 'http://localhost:8000';
+        : import.meta.env.VITE_SOCKET_URL || 'https://social-media-pdbl.onrender.com';
       socket.current = io(SOCKET_URL, {
         auth: {
           token: user.token

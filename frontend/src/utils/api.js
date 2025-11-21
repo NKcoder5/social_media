@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_BASE_URL = window.location.hostname === 'sociogram-1.onrender.com' 
   ? 'https://sociogram-n73b.onrender.com/api/v1'
   : import.meta.env.VITE_API_URL || 
-    (import.meta.env.PROD ? 'https://sociogram-n73b.onrender.com/api/v1' : 'http://localhost:8000/api/v1');
+    (import.meta.env.PROD ? 'https://social-media-pdbl.onrender.com/api/v1' : 'https://social-media-pdbl.onrender.com/api/v1');
 
 console.log('🌐 API Base URL:', API_BASE_URL);
 console.log('🏠 Current hostname:', window.location.hostname);
