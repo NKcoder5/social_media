@@ -7,25 +7,33 @@ const connectedUsers = new Map();
 export const initializeSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: [
-        // Local development override or deployed frontend
-        process.env.FRONTEND_URL || "https://social-media-1-lzs4.onrender.com",
-        "http://localhost:5000",
-        "http://127.0.0.1:5000",
-        "http://localhost:5176",
-        "http://localhost:5175",
-        "http://127.0.0.1:5175",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        // Production Render URLs
-        "https://sociogram-1.onrender.com",        // Frontend
-        "https://sociogram-n73b.onrender.com",     // Backend (self-reference)
-        // Replit URLs (if applicable)
-        `https://${process.env.REPLIT_DEV_DOMAIN}`,
-        `http://${process.env.REPLIT_DEV_DOMAIN}`
-      ],
+      origin: (origin, callback) => {
+        // Build a matching allowlist for sockets
+        const allowed = [
+          process.env.FRONTEND_URL || "https://social-media-1-lzs4.onrender.com",
+          "https://social-media-pdbl.onrender.com",
+          "https://sociogram-1.onrender.com",
+          "https://sociogram-n73b.onrender.com",
+          "http://localhost:5001",
+          "http://localhost:5000",
+          "http://127.0.0.1:5000",
+          "http://localhost:5176",
+          "http://localhost:5175",
+          "http://127.0.0.1:5175",
+          "http://localhost:8000",
+          "http://127.0.0.1:8000",
+          "http://localhost:5173",
+          "http://127.0.0.1:5173",
+          `https://${process.env.REPLIT_DEV_DOMAIN}`,
+          `http://${process.env.REPLIT_DEV_DOMAIN}`
+        ];
+
+        // Allow non-browser clients without origin
+        if (!origin) return callback(null, true);
+
+        if (allowed.includes(origin)) return callback(null, true);
+        return callback(new Error('Not allowed by CORS'));
+      },
       methods: ["GET", "POST"],
       credentials: true,
       allowEIO3: true

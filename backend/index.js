@@ -39,32 +39,47 @@ const PORT = process.env.PORT || 8000;
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
-const corsOptions = {
-    origin: [
-        // Use FRONTEND_URL if provided, otherwise default to deployed frontend
+    // Build an allowlist and use a dynamic origin function so the server
+    // echoes the allowed origin back in the Access-Control-Allow-Origin header.
+    const ALLOWED_ORIGINS = [
+        // Prefer explicit FRONTEND_URL from environment when available
         process.env.FRONTEND_URL || 'https://social-media-1-lzs4.onrender.com',
+        // Backend (self) and known frontend deployments
+        'https://social-media-pdbl.onrender.com',
+        'https://sociogram-1.onrender.com',
+        'https://sociogram-n73b.onrender.com',
         // Local development URLs
-        'https://social-media-1-lzs4.onrender.com',
-        'http://localhost:5000', 
+        'http://localhost:5001',
+        'http://localhost:5000',
         'http://127.0.0.1:5000',
-        'http://localhost:5176', 
-        'http://localhost:5175', 
+        'http://localhost:5176',
+        'http://localhost:5175',
         'http://127.0.0.1:5175',
-        'http://localhost:8000', 
+        'http://localhost:8000',
         'http://127.0.0.1:8000',
         'http://localhost:5173',
         'http://127.0.0.1:5173',
-        // Replit URLs
-        `https://${process.env.REPLIT_DEV_DOMAIN}`, 
-        `http://${process.env.REPLIT_DEV_DOMAIN}`,
-        // Production Render URLs (corrected)
-        'https://sociogram-1.onrender.com',        // Frontend
-        'https://sociogram-n73b.onrender.com'      // Backend (self-reference for health checks)
-    ],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
-}
+        // Replit dynamic domain (if used)
+        `https://${process.env.REPLIT_DEV_DOMAIN}`,
+        `http://${process.env.REPLIT_DEV_DOMAIN}`
+    ];
+
+    const corsOptions = {
+        origin: (origin, callback) => {
+            // Allow non-browser requests like Postman (no origin)
+            if (!origin) return callback(null, true);
+
+            if (ALLOWED_ORIGINS.includes(origin)) {
+                return callback(null, true);
+            }
+
+            // If origin is not allowed, return an explicit error (browser will block)
+            return callback(new Error('Not allowed by CORS'));
+        },
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+    };
 app.use(cors(corsOptions));
 
 // Handle preflight requests
